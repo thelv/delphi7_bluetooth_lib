@@ -11,9 +11,6 @@ function start(): Integer;
 
 implementation
 
-uses
-  Main;
-
 var
   a: integer;
 
@@ -40,24 +37,24 @@ begin
   vGuid.Data4[6]:=chr($13);
   vGuid.Data4[7]:=chr($74);        
   FillChar(SockAddrBthLocal, SizeOf(SOCKADDR_BTH), chr(0));
-  res:=11;
+  //res:=11;
   res:=WSAStartup($0202, @vWsadata);
   //while(res=123) do begin
     socketServer:=socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM);
-    if(socketServer=9) then res:=7;
+    //if(socketServer=9) then res:=7;
 
     SockAddrBthLocal.addressFamily := AF_BTH;
     SockAddrBthLocal.port := BT_PORT_ANY;
     SockAddrBthLocal.serviceClassId:=vGuid;
   //end;
    res:=bind(socketServer, @sockAddrBthLocal, SizeOf(SOCKADDR_BTH));
-   if(res=9) then res:=7;
+   //if(res=9) then res:=7;
    res:=listen(socketServer, CXN_DEFAULT_LISTEN_BACKLOG);
-    if(res=9) then res:=7; if(res=9) then res:=7;
+    //if(res=9) then res:=7; if(res=9) then res:=7;
        res:=WSAGetLastError();
-    if(res=9) then res:=7;
+    //if(res=9) then res:=7;
     res:=getsockname(socketServer, @sockaddrbthlocal, @addrLen);
-    if(res=9) then res:=7;
+    //if(res=9) then res:=7;
 
     FillChar(vwsaQuerySet, sizeof(WSAQUERYSET), chr(0));
         vwsaQuerySet.dwSize:= sizeof(WSAQUERYSET);
@@ -79,29 +76,14 @@ begin
 
         res:=WSASetService(@vwsaQuerySet, RNRSERVICE_REGISTER, 0);
 
-       { lpCSAddrInfo[0].LocalAddr.iSockaddrLength = sizeof( SOCKADDR_BTH );
-        lpCSAddrInfo[0].LocalAddr.lpSockaddr = (LPSOCKADDR)&SockAddrBthLocal;
-        lpCSAddrInfo[0].RemoteAddr.iSockaddrLength = sizeof( SOCKADDR_BTH );
-        lpCSAddrInfo[0].RemoteAddr.lpSockaddr = (LPSOCKADDR)&SockAddrBthLocal;
-        lpCSAddrInfo[0].iSocketType = SOCK_STREAM;
-        lpCSAddrInfo[0].iProtocol = BTHPROTO_RFCOMM;}
-       if(res=9) then res:=7;
-   res:=WSAGetLastError();
-          if(res=9) then res:=7;
+       //if(res=9) then res:=7;
+   //res:=WSAGetLastError();
+         // if(res=9) then res:=7;
    socketClient:=accept(socketServer, Nil, nil);
    
    //
   // then do recv and send
   // actlen:=recv(socketClient , *some pointer on buffer*, len, 0);
-
-{   while(true) do begin
-      recv(socketClient,
-   end;}
-
-
-    if(res=9) then res:=7;
-   res:=WSAGetLastError();
-    if(res=9) then res:=7;
 end;
 
 initialization
