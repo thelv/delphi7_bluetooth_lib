@@ -14,6 +14,12 @@ const
   BT_PORT_ANY=Cardinal(-1);//4294967295;
   CXN_DEFAULT_LISTEN_BACKLOG=4;
   NS_BTH=16;
+  SIO_GET_INTERFACE_LIST = $4004747F;
+  IFF_UP = $00000001;
+  IFF_BROADCAST = $00000002;
+  IFF_LOOPBACK = $00000004;
+  IFF_POINTTOPOINT = $00000008;
+  IFF_MULTICAST = $00000010;
 
 type
   ushort=word;
@@ -87,6 +93,28 @@ type
     RNRSERVICE_DELETE
   );
 
+  short=word;
+  u_short=word;
+
+  sockaddr_in=record
+    sin_family: word;
+    sin_port: word;
+    sin_addr: integer;
+    sin_zero: array[0..7] of char;
+  end;
+
+  sockaddr_gen = packed record
+    AddressIn: sockaddr_in;
+    filler: packed array[0..7] of char;
+  end;
+
+  INTERFACE_INFO = packed record
+    iiFlags: longint; // Interface flags
+    iiAddress: sockaddr_gen; // Interface address
+    iiBroadcastAddress: sockaddr_gen; // Broadcast address
+    iiNetmask: sockaddr_gen; // Network mask
+  end;
+
 
   TSocket=integer;
 
@@ -102,6 +130,7 @@ var
   getsockname: function(s :TSocket; name: Pointer; namelen: Pointer): Integer; stdcall;
   WSASetService: function(lpqsRegInfo: LPWSAQUERYSET; essoperation:WSAESETSERVICEOP; dwControlFlags: Cardinal): Integer; stdcall;
   recv: function(s:TSocket; buf: pointer; len: Integer; flags: Integer):Integer; stdcall;
+  WSAIoctl: function(s: TSocket; cmd: DWORD; lpInBuffer: PCHAR; dwInBufferLen:  DWORD;  lpOutBuffer: PCHAR; dwOutBufferLen: DWORD;  lpdwOutBytesReturned: LPDWORD;  lpOverLapped: POINTER;  lpOverLappedRoutine: POINTER): Integer; stdcall;
 
 function LoadDll: Boolean;
 function ReleaseDll: Boolean;
@@ -133,6 +162,7 @@ begin
     listen:=GetProcAddress(DllModule, 'listen');
     accept:=GetProcAddress(DllModule, 'accept');
     getsockname:=GetProcAddress(DllModule, 'getsockname');
+    WSAIoctl:=GetProcAddress(DllModule, 'WSAIoctl');
     WSASetService:=GetProcAddress(DllModule, 'WSASetServiceW');
     if(@WSASetService=nil) then WSASetService:=GetProcAddress(DllModule, 'WSASetServiceA');
     recv:=GetProcAddress(DllModule, 'recv');
