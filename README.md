@@ -8,5 +8,5 @@ Bluetooth.pas has an example of using winsock2 dll to create bluetooth server.
 
 Put both files into your project dir, then call Bluetooth.start function.
 
-Project was made as port from C++ of official Microsoft bluetooth example https://code.msdn.microsoft.com/windowsdesktop/Bluetooth-Connection-e3263296  
+Project was made as a port from C++ of official Microsoft bluetooth example https://code.msdn.microsoft.com/windowsdesktop/Bluetooth-Connection-e3263296  
 You can continue porting functions you need from this.
